@@ -1,0 +1,20 @@
+﻿@model IEnumerable<TestTaskForInforce.Data.Entities.UrlEntity>
+@{
+    ViewData["Title"] = "Url List";
+}
+<html>
+<body>
+    @Html.React("UrlListComponent", new
+    {
+    data = Model,
+    url = Url.Action("Urls"),
+    submitUrl = Url.Action("AddShortenedUrl"),
+    Interval = 2000
+    })
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react/16.13.0/umd/react.development.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/16.13.0/umd/react-dom.development.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prop-types/15.6.0/prop-types.js"></script>
+    <script src="@Url.Content("~/js/UrlListComponent.jsx")"></script>
+    @Html.ReactInitJavaScript()
+</body>
+</html>
