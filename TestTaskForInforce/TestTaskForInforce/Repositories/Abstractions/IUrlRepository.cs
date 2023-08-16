@@ -4,7 +4,7 @@ namespace TestTaskForInforce.Repositories.Abstractions
 {
     public interface IUrlRepository
     {
-        Task<int> CreateShortenedUrlAsync(string url, string shortenedUrl);
+        Task<int> CreateShortenedUrlAsync(string url, string shortenedUrl, UserEntity user);
 
         Task<UrlEntity?> GetUrlByBaseUrlAsync(string baseUrl);
 

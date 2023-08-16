@@ -35,12 +35,14 @@
 
 	return (
 		<>
-			<ShortUrlForm onSubmit={handleSubmit} />
+			{props.isAuthenticated && (
+				<ShortUrlForm onSubmit={handleSubmit} />
+			)}			
 			<h1 className="text-center my-5">Url List</h1>
 			<div className="table-responsive">
 				<table className="table table-striped">
 					<thead>
-						<tr className="text-center">
+						<tr>
 							<th style={{ width: "1%" }} scope="col">Id</th>
 							<th style={{ width: "70%" }} scope="col">Base Url</th>
 							<th style={{ width: "15%" }} scope="col">Shortened Url</th>
@@ -50,8 +52,8 @@
 						{urls.map((url) => (
 							<tr key={url.id}>
 								<th scope="row">{url.id}</th>
-								<td scope="row"><a href={url.baseUrl}>{url.baseUrl}</a></td>
-								<td scope="row"><a href={`https://localhost:7068/${url.shortenedUrl}`}>https://localhost:7068/{url.shortenedUrl}</a></td>
+								<td scope="row"><a href={url.baseUrl} target="_blank">{url.baseUrl}</a></td>
+								<td scope="row"><a href={`https://localhost:7068/${url.shortenedUrl}`} target="_blank">https://localhost:7068/{url.shortenedUrl}</a></td>
 							</tr>
 						))}
 					</tbody>

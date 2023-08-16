@@ -4,7 +4,7 @@ namespace TestTaskForInforce.Services.Abstractions
 {
     public interface IUrlService
     {
-        Task<int> CreateShortenedUrlAsync(string url);
+        Task<int> CreateShortenedUrlAsync(string url, string email);
 
         Task<UrlEntity?> GetByShortenUrlAsync(string shortenUrl);
 

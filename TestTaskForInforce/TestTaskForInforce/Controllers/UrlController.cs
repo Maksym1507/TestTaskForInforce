@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using TestTaskForInforce.Models.Requests;
 using TestTaskForInforce.Models.Responses;
 using TestTaskForInforce.Services.Abstractions;
@@ -39,11 +40,12 @@ namespace TestTaskForInforce.Controllers
         }
 
         [HttpPost]
+        [Authorize]
         public async Task<ActionResult> AddShortenedUrl(UrlRequest request)
         {
             try
             {
-                var result = await _urlService.CreateShortenedUrlAsync(request.Url);
+                var result = await _urlService.CreateShortenedUrlAsync(request.Url, HttpContext.User.Identity!.Name);
                 return Ok(new AddItemResponse<int?>() { Id = result });
             }
             catch (Exception ex)

@@ -4,6 +4,7 @@ namespace TestTaskForInforce.Models.Requests
 {
     public class UrlRequest
     {
-        public string Url { get; set; }
+        [Required]
+        public string Url { get; set; } = null!;
     }
 }

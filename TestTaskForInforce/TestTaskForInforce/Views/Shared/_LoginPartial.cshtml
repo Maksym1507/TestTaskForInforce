@@ -1,0 +1,22 @@
+﻿<section class="my-2 my-lg-0">
+    @if (!Context.User.Identity!.IsAuthenticated)
+    {
+        <a class="nav-link text-dark" asp-area="" asp-controller="Auth" asp-action="Login">Login</a>
+    }
+    else
+    {
+        <form asp-area="" asp-controller="Auth" asp-action="Signout" method="post" id="logoutForm" class="navbar-right">
+            <div class="dropdown">
+                <div class="dropdown-toggle" type="button" id="userActions" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    @Context.User.Identity.Name
+                </div>
+                <div class="dropdown-menu" aria-labelledby="userActions">
+                    <a class="dropdown-item"
+                       href="javascript:document.getElementById('logoutForm').submit()">
+                        Log Out
+                    </a>
+                </div>
+            </div>
+        </form>
+    }
+</section>

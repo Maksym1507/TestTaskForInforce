@@ -10,6 +10,8 @@ using TestTaskForInforce.Services;
 using Newtonsoft.Json.Serialization;
 using Newtonsoft.Json;
 using JavaScriptEngineSwitcher.ChakraCore;
+using Microsoft.AspNetCore.Authentication.Cookies;
+
 
 namespace TestTaskForInforce
 {
@@ -26,14 +28,26 @@ namespace TestTaskForInforce
             builder.Services.AddReact();
             builder.Services.AddJsEngineSwitcher(options => options.DefaultEngineName = V8JsEngine.EngineName).AddV8();
 
+            builder.Services.AddAutoMapper(typeof(Program));
+
+            builder.Services.AddTransient<IAuthService, AuthService>();
+            builder.Services.AddTransient<IUserRepository, UserRepository>();
+            builder.Services.AddTransient<IUserService, UserService>();
             builder.Services.AddTransient<IUrlRepository, UrlRepository>();
             builder.Services.AddTransient<IUrlService, UrlService>();
 
-            builder.Services.AddControllersWithViews();
-
+            var sqlConnection = builder.Configuration.GetConnectionString("DefaultConnection");
             builder.Services.AddDbContext<ApplicationDbContext>(options =>
-                options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
-            builder.Services.AddMvc();
+                options.UseSqlServer(sqlConnection));
+
+            builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+                .AddCookie(options =>
+                {
+                    options.LoginPath = new PathString("/Auth/Login");
+                    options.AccessDeniedPath = new PathString("/Auth/Login");
+                });
+
+            builder.Services.AddControllersWithViews();
 
             var app = builder.Build();
 
@@ -46,6 +60,7 @@ namespace TestTaskForInforce
             {
                 config
                   .AddScript("~/js/urlListComponent.jsx")
+                  .AddScript("~/js/loginComponent.jsx")
                   .SetJsonSerializerSettings(new JsonSerializerSettings
                   {
                       StringEscapeHandling = StringEscapeHandling.EscapeHtml,
@@ -56,6 +71,9 @@ namespace TestTaskForInforce
             app.UseStaticFiles();
 
             app.UseRouting();
+
+            app.UseAuthentication();
+            app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {

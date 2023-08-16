@@ -9,7 +9,8 @@
     data = Model,
     url = Url.Action("Urls"),
     submitUrl = Url.Action("AddShortenedUrl"),
-    Interval = 2000
+    Interval = 2000,
+    IsAuthenticated = Context.User.Identity!.IsAuthenticated
     })
     <script src="https://cdnjs.cloudflare.com/ajax/libs/react/16.13.0/umd/react.development.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/16.13.0/umd/react-dom.development.js"></script>

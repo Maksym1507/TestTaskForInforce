@@ -15,13 +15,13 @@ namespace TestTaskForInforce.Repositories
             _dbContext = dbContext;
         }
 
-        public async Task<int> CreateShortenedUrlAsync(string url, string shortenedUrl)
+        public async Task<int> CreateShortenedUrlAsync(string url, string shortenedUrl, UserEntity user)
         {
             var urlToCreate = new UrlEntity
             {
                 BaseUrl = url,
                 ShortenedUrl = shortenedUrl,
-                UserId = "eaf1c04b-c6eb-4a63-a1a2-01d33922d018",
+                UserId = user.Id,
                 CreatedAt = DateTime.UtcNow,
             };
 
@@ -44,7 +44,7 @@ namespace TestTaskForInforce.Repositories
 
         public async Task<IEnumerable<UrlEntity>?> GetUrlsAsync()
         {
-            return await _dbContext.Urls.ToListAsync();
+            return await _dbContext.Urls.Include(i=>i.User).ToListAsync();
         }
     }
 }
