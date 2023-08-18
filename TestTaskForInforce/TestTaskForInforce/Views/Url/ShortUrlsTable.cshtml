@@ -1,4 +1,4 @@
-﻿@model IEnumerable<TestTaskForInforce.Data.Entities.UrlEntity>
+﻿@model IEnumerable<TestTaskForInforce.Models.Responses.UrlResponse>
 @{
     ViewData["Title"] = "Url List";
 }
@@ -8,9 +8,11 @@
     {
     data = Model,
     url = Url.Action("Urls"),
-    submitUrl = Url.Action("AddShortenedUrl"),
-    Interval = 2000,
-    IsAuthenticated = Context.User.Identity!.IsAuthenticated
+    addUrl = Url.Action("AddShortenedUrl"),
+    deleteUrl = Url.Action("Delete"),
+    isAuthenticated = Context.User.Identity!.IsAuthenticated,
+    userEmail = Context.User.Identity!.Name,
+    isAdmin = Context.User.IsInRole("admin")
     })
     <script src="https://cdnjs.cloudflare.com/ajax/libs/react/16.13.0/umd/react.development.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/16.13.0/umd/react-dom.development.js"></script>

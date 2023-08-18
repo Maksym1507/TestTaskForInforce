@@ -44,7 +44,26 @@ namespace TestTaskForInforce.Repositories
 
         public async Task<IEnumerable<UrlEntity>?> GetUrlsAsync()
         {
-            return await _dbContext.Urls.Include(i=>i.User).ToListAsync();
+            return await _dbContext.Urls.Include(i=>i.User).ThenInclude(t => t.Role).ToListAsync();
+        }
+
+        public async Task<bool> DeleteAsync(UrlEntity url)
+        {
+            _dbContext.Urls.Remove(url);
+
+            var quantityRows = await _dbContext.SaveChangesAsync();
+
+            if (quantityRows > 0)
+            {
+                return true;
+            }
+
+            return false;
+        }
+
+        public async Task<UrlEntity?> GetUrlByIdAsync(int id)
+        {
+            return await _dbContext.Urls.Include(i => i.User).ThenInclude(t => t.Role).FirstOrDefaultAsync(f => f.Id == id);
         }
     }
 }

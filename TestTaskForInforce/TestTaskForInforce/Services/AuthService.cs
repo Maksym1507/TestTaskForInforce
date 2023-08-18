@@ -19,21 +19,21 @@ namespace TestTaskForInforce.Services
         {
             var user = await _userService.GetUserByEmailAndPasswordAsync(email, password);
 
-            if (user != null)
+            if (user == null)
             {
-                var claims = new List<Claim>
+                throw new Exception("User not found");
+            };
+
+            var claims = new List<Claim>
                 {
                     new Claim(ClaimsIdentity.DefaultNameClaimType, user.Email),
                     new Claim(ClaimsIdentity.DefaultRoleClaimType, user.Role!.Name)
                 };
 
-                ClaimsIdentity id = new ClaimsIdentity(claims, "ApplicationCookie", ClaimsIdentity.DefaultNameClaimType,
-                ClaimsIdentity.DefaultRoleClaimType);
+            ClaimsIdentity id = new ClaimsIdentity(claims, "ApplicationCookie", ClaimsIdentity.DefaultNameClaimType,
+            ClaimsIdentity.DefaultRoleClaimType);
 
-                return id;
-            };
-
-            return null;
+            return id;
         }
     }
 }

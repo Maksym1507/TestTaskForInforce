@@ -1,4 +1,6 @@
-﻿using TestTaskForInforce.Data.Entities;
+﻿using AutoMapper;
+using TestTaskForInforce.Data.Entities;
+using TestTaskForInforce.Models.Responses;
 using TestTaskForInforce.Repositories.Abstractions;
 using TestTaskForInforce.Services.Abstractions;
 
@@ -9,15 +11,17 @@ namespace TestTaskForInforce.Services
         private readonly IUrlRepository _urlRepository;
         private readonly IUserRepository _userRepository;
         private readonly ILogger<UrlService> _loggerService;
+        private readonly IMapper _mapper;
 
         public UrlService(
             IUrlRepository urlRepository,
             IUserRepository userRepository,
-            ILogger<UrlService> loggerService)
+            ILogger<UrlService> loggerService, IMapper mapper)
         {
             _urlRepository = urlRepository;
             _userRepository = userRepository;
             _loggerService = loggerService;
+            _mapper = mapper;
         }
 
         public async Task<int> CreateShortenedUrlAsync(string url, string email)
@@ -34,7 +38,7 @@ namespace TestTaskForInforce.Services
             {
                 _loggerService.LogError($"Shortened url with baseUrl = {url} has already existed");
                 throw new Exception($"Shortened url with baseUrl = {url} has already existed");
-            }           
+            }
 
             var shortenedUrl = ShortUrlService.CreateShortUrlPath(url);
 
@@ -56,17 +60,34 @@ namespace TestTaskForInforce.Services
             return result;
         }
 
-        public async Task<IEnumerable<UrlEntity>?> GetUrlsAsync()
+        public async Task<IEnumerable<UrlResponse>?> GetUrlsAsync()
         {
             var result = await _urlRepository.GetUrlsAsync();
 
-            if (!result.Any())
+            if (result!.Count() == 0)
             {
                 _loggerService.LogWarning($"Not founded urls");
-                return null;
+                return new List<UrlResponse>();
             }
 
-            return result;
+            var a = result!.Select(s => _mapper.Map<UrlResponse>(s));
+
+            return result!.Select(s => _mapper.Map<UrlResponse>(s));
+        }
+
+        public async Task<bool> DeleteAsync(int id)
+        {
+            var urlToDelete = await _urlRepository.GetUrlByIdAsync(id);
+
+            if (urlToDelete == null)
+            {
+                _loggerService.LogWarning($"Url with {id} hasn't founded");
+                return false;
+            }
+
+            var isDeleted = await _urlRepository.DeleteAsync(urlToDelete);
+            _loggerService.LogInformation($"Removed url with id = {id}");
+            return isDeleted;
         }
     }
 }

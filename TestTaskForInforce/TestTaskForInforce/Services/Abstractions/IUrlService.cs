@@ -1,4 +1,5 @@
 ﻿using TestTaskForInforce.Data.Entities;
+using TestTaskForInforce.Models.Responses;
 
 namespace TestTaskForInforce.Services.Abstractions
 {
@@ -8,6 +9,8 @@ namespace TestTaskForInforce.Services.Abstractions
 
         Task<UrlEntity?> GetByShortenUrlAsync(string shortenUrl);
 
-        Task<IEnumerable<UrlEntity>?> GetUrlsAsync();
+        Task<IEnumerable<UrlResponse>?> GetUrlsAsync();
+
+        Task<bool> DeleteAsync(int id);
     }
 }

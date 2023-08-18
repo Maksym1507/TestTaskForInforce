@@ -1,7 +1,36 @@
 ﻿const UrlListComponent = (props) => {
 	const [urls, setUrls] = React.useState(props.data);
+	const [deleleResponse, setDeleleResponse] = React.useState();
+	const [addResponse, setAddResponse] = React.useState();
+
+	React.useEffect(() => {
+		if (addResponse) {
+			if (addResponse.id) {
+				alert(`Shortened url has been added with id = ${addResponse.id}`);
+				loadUrlsFromServer();
+			}
+			if (addResponse.message) {
+				alert(addResponse.message);
+			}
+		}
+
+	}, [addResponse]);
+
+	React.useEffect(() => {
+		if (deleleResponse) {
+			if (deleleResponse.isDeleted) {
+				alert("Url has been removed");
+				loadUrlsFromServer();
+			}
+			else {
+				alert("Failed to remove");
+			}
+		}
+
+	}, [deleleResponse]);
 
 	loadUrlsFromServer = () => {
+
 		var xhr = new XMLHttpRequest();
 		xhr.open('get', props.url, true);
 		xhr.onload = function () {
@@ -12,53 +41,65 @@
 		xhr.send();
 	};
 
-	handleSubmit = url => {
-		var data = new FormData();
-		data.append('url', url.url);
+	handleAddSubmit = url => {
+		const requestOptions = {
+			method: 'POST',
+			headers: { 'Content-Type': 'application/json' },
+			body: JSON.stringify({ url: url.url })
+		};
 
-		try {
-			var xhr = new XMLHttpRequest();
-			xhr.open('post', props.submitUrl, true);
-			xhr.onload = function () {
-				loadUrlsFromServer();
-			}.bind(this);
-
-			xhr.send(data);
-		} catch (error) {
-			alert(`${error.message}. Try again`);
-		}
+		(async () => {
+			setAddResponse(
+				await fetch(props.addUrl, requestOptions).then(e => e.json()));
+		})();
 	};
 
-	React.useEffect(() => {
-		window.setInterval(loadUrlsFromServer, props.interval);
-	}, []);
+	handleDeleteSubmit = (id) => {
+		const requestOptions = {
+			method: 'POST',
+			headers: { 'Content-Type': 'application/json' }
+		};
+
+		(async () => {
+			setDeleleResponse(
+				await fetch(`${props.deleteUrl}/${id}`, requestOptions).then(e => e.json()));
+		})();
+	}
 
 	return (
 		<>
 			{props.isAuthenticated && (
-				<ShortUrlForm onSubmit={handleSubmit} />
-			)}			
-			<h1 className="text-center my-5">Url List</h1>
-			<div className="table-responsive">
+				<ShortUrlForm onSubmit={handleAddSubmit} />
+			)}
+			<h1 className="text-center my-3">Url List</h1>
+			{urls.length > 0 ? <div className="table-responsive">
 				<table className="table table-striped">
 					<thead>
 						<tr>
-							<th style={{ width: "1%" }} scope="col">Id</th>
-							<th style={{ width: "70%" }} scope="col">Base Url</th>
-							<th style={{ width: "15%" }} scope="col">Shortened Url</th>
+							<th style={{ width: "60%" }} scope="col">Base Url</th>
+							<th style={{ width: "30%" }} scope="col">Shortened Url</th>
+							<th style={{ width: "10%" }} scope="col"></th>
 						</tr>
 					</thead>
 					<tbody>
 						{urls.map((url) => (
 							<tr key={url.id}>
-								<th scope="row">{url.id}</th>
 								<td scope="row"><a href={url.baseUrl} target="_blank">{url.baseUrl}</a></td>
 								<td scope="row"><a href={`https://localhost:7068/${url.shortenedUrl}`} target="_blank">https://localhost:7068/{url.shortenedUrl}</a></td>
+								{
+									(props.isAdmin || url.user.email === props.userEmail) ? (
+										<td scope="row">
+											<button className="btn btn-danger" style={{ width: "7rem" }} variant="primary" type="submit" onClick={e => handleDeleteSubmit(url.id)}>Delete</button>
+										</td>
+									) : (<td scope="row">
+										<button className="btn btn-danger" style={{ width: "7rem" }} variant="primary" type="submit" disabled>Delete</button>
+									</td>)}
 							</tr>
 						))}
 					</tbody>
 				</table>
 			</div>
+				: <div className="text-center">Url list is empty</div>}
 		</>
 	);
 }
@@ -82,6 +123,7 @@ const ShortUrlForm = (props) => {
 		props.onSubmit({ url: url });
 		setCreateShortenedUrlformData({ url: '' });
 	};
+
 	return (
 		<form onSubmit={handleSubmit}>
 			<input
@@ -90,7 +132,7 @@ const ShortUrlForm = (props) => {
 				value={createShortenedUrlformData.url}
 				onChange={handleChange}
 			/>
-			<input type="submit" value="Short url" />
+			<input className="ms-2" type="submit" value="Short url" />
 		</form>
 	);
 }

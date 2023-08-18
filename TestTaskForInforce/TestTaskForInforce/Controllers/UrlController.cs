@@ -41,17 +41,24 @@ namespace TestTaskForInforce.Controllers
 
         [HttpPost]
         [Authorize]
-        public async Task<ActionResult> AddShortenedUrl(UrlRequest request)
+        public async Task<ActionResult> AddShortenedUrl([FromBody] UrlRequest request)
         {
             try
             {
-                var result = await _urlService.CreateShortenedUrlAsync(request.Url, HttpContext.User.Identity!.Name);
+                var result = await _urlService.CreateShortenedUrlAsync(request.Url, HttpContext.User.Identity!.Name!);
                 return Ok(new AddItemResponse<int?>() { Id = result });
             }
             catch (Exception ex)
             {
                 return BadRequest(new { ex.Message });
             }
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> Delete(int id)
+        {
+            var result = await _urlService.DeleteAsync(id);
+            return Ok(new DeleteItemResponse<bool>() { IsDeleted = result });
         }
     }
 }

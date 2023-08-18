@@ -10,6 +10,10 @@ namespace TestTaskForInforce.Repositories.Abstractions
 
         Task<UrlEntity?> GetByShortenUrlAsync(string shortenUrl);
 
+        Task<UrlEntity?> GetUrlByIdAsync(int id);
+
         Task<IEnumerable<UrlEntity>?> GetUrlsAsync();
+
+        Task<bool> DeleteAsync(UrlEntity url);
     }
 }

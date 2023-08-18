@@ -1,5 +1,15 @@
 ﻿const LoginComponent = (props) => {
 	const [loginFormData, setLoginFormData] = React.useState({ email: '', password: '' });
+	const [loginResponse, setLoginResponse] = React.useState();
+
+	React.useEffect(() => {
+		if (loginResponse) {
+			if (loginResponse.message) {
+				alert(loginResponse.message);
+			}
+		}
+
+	}, [loginResponse]);
 
 
 	handleEmailChange = (e) => {
@@ -19,21 +29,16 @@
 	handleSubmit = e => {
 		e.preventDefault();
 
-		console.log(loginFormData.email);
-		console.log(loginFormData.password);
+		const requestOptions = {
+			method: 'POST',
+			headers: { 'Content-Type': 'application/json' },
+			body: JSON.stringify(loginFormData)
+		};
 
-		var data = new FormData();
-		data.append('email', loginFormData.email);
-		data.append('password', loginFormData.password);
-
-		try {
-			var xhr = new XMLHttpRequest();
-			xhr.open('post', props.submitUrl, true);
-
-			xhr.send(data);
-		} catch (error) {
-			alert(`${error.message}. Try again`);
-		}
+		(async () => {
+			setLoginResponse(
+				await fetch(props.submitUrl, requestOptions).then(e => e.json()));
+		})();
 	};
 	return (
 		<div className="container">

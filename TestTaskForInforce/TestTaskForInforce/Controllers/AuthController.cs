@@ -28,17 +28,20 @@ namespace TestTaskForInforce.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Login(LoginRequest request)
+        public async Task<IActionResult> Login([FromBody] LoginRequest request)
         {
-            var claimsIdentity = await _authService.LoginUserAsync(request.Email!, request.Password!);
-
-            if (claimsIdentity != null)
+            try
             {
+                var claimsIdentity = await _authService.LoginUserAsync(request.Email!, request.Password!);
                 await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity));
-                return RedirectToAction(nameof(UrlController.ShortUrlsTable), "Url");
-            }
 
-            return View(request);
+                return Ok(new { Message = "You are log in"});
+            }
+            catch (Exception ex)
+            {
+
+                return BadRequest(new { ex.Message });
+            }
         }
 
         public async Task<IActionResult> Signout()
