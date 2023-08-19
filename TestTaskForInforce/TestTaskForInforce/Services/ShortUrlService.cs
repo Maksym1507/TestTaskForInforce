@@ -10,8 +10,8 @@ namespace TestTaskForInforce.Services
         public static string CreateShortUrlPath(string url)
         {
             var asByteArray = Encoding.Default.GetBytes(url);
-            var hashedPasswrod = SHA256.Create().ComputeHash(asByteArray);
-            StringBuilder convertedUrl = new StringBuilder(Convert.ToBase64String(hashedPasswrod));          
+            var hashedPassword = SHA256.Create().ComputeHash(asByteArray);
+            StringBuilder convertedUrl = new StringBuilder(Convert.ToBase64String(hashedPassword));
 
             var rand = new Random();
 

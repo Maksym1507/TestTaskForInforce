@@ -60,6 +60,19 @@ namespace TestTaskForInforce.Services
             return result;
         }
 
+        public async Task<UrlResponse?> GetShortUrlByIdAsync(int id)
+        {
+            var result = await _urlRepository.GetUrlByIdAsync(id);
+
+            if (result == null)
+            {
+                _loggerService.LogWarning($"Not founded url with id = {id}");
+                return null;
+            }
+
+            return _mapper.Map<UrlResponse>(result);
+        }
+
         public async Task<IEnumerable<UrlResponse>?> GetUrlsAsync()
         {
             var result = await _urlRepository.GetUrlsAsync();

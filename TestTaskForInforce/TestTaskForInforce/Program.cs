@@ -60,6 +60,7 @@ namespace TestTaskForInforce
             {
                 config
                   .AddScript("~/js/urlListComponent.jsx")
+                  .AddScript("~/js/urlInfoComponent.jsx")
                   .AddScript("~/js/loginComponent.jsx")
                   .SetJsonSerializerSettings(new JsonSerializerSettings
                   {

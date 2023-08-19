@@ -76,16 +76,24 @@
 				<table className="table table-striped">
 					<thead>
 						<tr>
-							<th style={{ width: "60%" }} scope="col">Base Url</th>
-							<th style={{ width: "30%" }} scope="col">Shortened Url</th>
+							<th style={{ width: "50%" }} scope="col">Base Url</th>
+							<th style={{ width: "25%" }} scope="col">Shortened Url</th>
+							<th style={{ width: "15%" }} scope="col"></th>
 							<th style={{ width: "10%" }} scope="col"></th>
 						</tr>
 					</thead>
 					<tbody>
 						{urls.map((url) => (
 							<tr key={url.id}>
-								<td scope="row"><a href={url.baseUrl} target="_blank">{url.baseUrl}</a></td>
-								<td scope="row"><a href={`https://localhost:7068/${url.shortenedUrl}`} target="_blank">https://localhost:7068/{url.shortenedUrl}</a></td>
+								<td scope="row"><a className="text-decoration-none" href={url.baseUrl} target="_blank">{url.baseUrl}</a></td>
+								<td scope="row"><a className="text-decoration-none" href={`https://localhost:7068/${url.shortenedUrl}`} target="_blank">https://localhost:7068/{url.shortenedUrl}</a></td>
+								<td scope="row">
+									<button className="btn btn-success" variant="primary" type="submit">
+										<a className="text-decoration-none text-white" href={`${props.showInfoUrl}/${url.id}`}>
+										Show details
+									</a>
+									</button>
+									</td>
 								{
 									(props.isAdmin || url.user.email === props.userEmail) ? (
 										<td scope="row">

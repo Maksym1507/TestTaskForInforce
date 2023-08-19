@@ -20,6 +20,11 @@ namespace TestTaskForInforce.Controllers
             return View(await _urlService.GetUrlsAsync());
         }
 
+        public async Task<IActionResult> ShortUrlInfo(int id)
+        {
+            return View(await _urlService.GetShortUrlByIdAsync(id));
+        }
+
         public async Task<ActionResult> Urls()
         {
             return Json(await _urlService.GetUrlsAsync());

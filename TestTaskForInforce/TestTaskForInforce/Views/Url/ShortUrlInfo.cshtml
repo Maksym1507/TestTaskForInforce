@@ -1,0 +1,18 @@
+﻿@model TestTaskForInforce.Models.Responses.UrlResponse
+@{
+    ViewData["Title"] = "Url Info";
+}
+<html>
+<body>
+    @Html.React("UrlInfoComponent", new
+    {
+    data = Model,
+    shortUrlsTableUrl = Url.Action("ShortUrlsTable"),
+    })
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react/16.13.0/umd/react.development.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/16.13.0/umd/react-dom.development.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prop-types/15.6.0/prop-types.js"></script>
+    <script src="@Url.Content("~/js/urlInfoComponent.jsx")"></script>
+    @Html.ReactInitJavaScript()
+</body>
+</html>

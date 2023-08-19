@@ -6,11 +6,11 @@
 		if (loginResponse) {
 			if (loginResponse.message) {
 				alert(loginResponse.message);
+				window.location.href = 'https://localhost:7068/';
 			}
 		}
 
 	}, [loginResponse]);
-
 
 	handleEmailChange = (e) => {
 		setLoginFormData({
